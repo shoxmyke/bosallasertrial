@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: laser-planner
+    runtime: docker
+    plan: starter            # a paid plan is needed for the disk that keeps the planner's data
+    healthCheckPath: /api/health
+    disk:
+      name: planner-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PLANNER_DB
+        value: /var/data/planner.db
+      - key: PLANNER_PASSWORD
+        sync: false          # Render asks you for the team password when you create the service

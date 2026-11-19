@@ -20,6 +20,28 @@ from .store import Store
 
 app = FastAPI(title="Laser Cutting Planner", version="1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+
+# Team password: when PLANNER_PASSWORD is set, the browser asks for it (any user name works).
+PASSWORD = os.environ.get("PLANNER_PASSWORD", "")
+
+
+@app.middleware("http")
+async def team_password(request, call_next):
+    import base64
+    import hmac
+    if PASSWORD and request.url.path != "/api/health":
+        ok = False
+        auth = request.headers.get("authorization", "")
+        if auth.lower().startswith("basic "):
+            try:
+                _, _, pw = base64.b64decode(auth[6:]).decode("utf-8").partition(":")
+                ok = hmac.compare_digest(pw, PASSWORD)
+            except Exception:  # noqa: BLE001
+                ok = False
+        if not ok:
+            return Response("Password required", status_code=401,
+                            headers={"WWW-Authenticate": 'Basic realm="Laser Planner"'})
+    return await call_next(request)
 store = Store()
 
 # Sections made of rows identified by key fields (one row = one line on a page)

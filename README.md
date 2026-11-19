@@ -20,6 +20,19 @@ database is empty.
 
 While working on the frontend: run `npm run dev` in `frontend/` (port 5173, API calls are proxied to port 8000).
 
+## Host it on Render
+
+1. On https://render.com, sign in (you can use your GitHub account), then go to **New → Blueprint**.
+2. Pick the repository `shoxmyke/bosallasertrial`. Render reads `render.yaml`.
+3. When asked for `PLANNER_PASSWORD`, type the password your team will use. Then click **Apply**.
+4. When the deploy is finished, open the `…onrender.com` link. The browser asks for a user name (anything) and
+   the password.
+5. First time only: click **Import Excel planner…** (bottom left) and choose the v35 workbook.
+
+The service uses the Starter plan with a 1 GB disk (about USD 7.25 a month). The free plan has no disk, so
+everything typed would be lost on every restart. Change the password any time under the service's
+**Environment** settings. Use **Download backup** now and then.
+
 ## Tabs → pages
 
 | Workbook tab | In the app |
